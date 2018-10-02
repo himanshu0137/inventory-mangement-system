@@ -1,0 +1,10 @@
+.btn-color{
+    background-color: #F2FF00;
+}
+.btn-chemical{
+    background-color: #00FFFF;
+}
+
+.btn.active{
+    box-shadow: 0 0 0 0.2rem green;
+}

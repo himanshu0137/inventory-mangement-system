@@ -1,0 +1,150 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-group row">
+    <label for="entryDate" class="col-sm-2 col-form-label">Date</label>
+    <div class="col-sm-10">
+      <input type="text" placeholder="Datepicker" [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY' }" class="form-control"
+        id="entryDate" bsDatepicker formControlName="entryDate">
+    </div>
+  </div>
+  <ng-container>
+    <div class="form-group row">
+      <label for=" entryColor" class="col-sm-2 col-form-label">Color</label>
+      <div class="col-sm-10">
+        <input type="text" placeholder="Color" class="form-control" id="entryColor" formControlName="entryColor">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="entryLot" class="col-sm-2 col-form-label">Lot No.</label>
+      <div class="col-sm-10">
+        <input type="text" placeholder="Lot Number" class="form-control" id="entryLot" formControlName="entryLot">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="entryRollCount" class="col-sm-2 col-form-label">Roll</label>
+      <div class="col-sm-10">
+        <input type="number" min="0" placeholder="Roll" class="form-control" id="entryRollCount" formControlName="entryRollCount">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="entryWeight" class="col-sm-2 col-form-label">Weight</label>
+      <div class="col-sm-10">
+        <input type="number" min="0" placeholder="Weight" class="form-control" id="entryWeight" formControlName="entryWeight">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="entryMachineNo" class="col-sm-2 col-form-label">Machine No.</label>
+      <div class="col-sm-10">
+        <input type="text" placeholder="Machine No." class="form-control" id="entryMachineNo" formControlName="entryMachineNo">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="entryCloth" class="col-sm-2 col-form-label">Cloth</label>
+      <div class="col-sm-10">
+        <input type="text" placeholder="Cloth" class="form-control" id="entryCloth" formControlName="entryCloth">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="entryOperator" class="col-sm-2 col-form-label">Operator</label>
+      <div class="col-sm-10">
+        <input type="text" placeholder="Operator" class="form-control" id="entryOperator" formControlName="entryOperator">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="entryPartyName" class="col-sm-2 col-form-label">Party Name</label>
+      <div class="col-sm-10">
+        <input type="text" placeholder="Party Name" class="form-control" id="entryPartyName" formControlName="entryPartyName">
+      </div>
+    </div>
+  </ng-container>
+  <div formGroupName="entryItems">
+    <div formGroupName="entryChemicalItems">
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Chemical</label>
+      </div>
+      <div formArrayName="items">
+        <div class="form-group row" *ngFor="let item of entryChemicalItems.controls;index as i;trackBy:trackByFn"
+          [formGroupName]="i">
+          <div class="col-sm-4">
+            <input type="text" list="chemicalSuggetion" placeholder="Item Name" class="form-control" formControlName="itemName">
+          </div>
+          <div class="col-sm-4">
+            <input type="text" placeholder="Quantity (kg)" class="form-control" formControlName="itemQuantity">
+            <small class="text-muted">={{item.value.itemQuantityValue}} BAL: {{item.value.itemQuantityBalance}}</small>
+          </div>
+          <div class="col-sm-3">
+            <input type="number" placeholder="Rate (Rs/kg)" class="form-control" formControlName="itemRate">
+            <small class="text-muted">{{item.value.itemTotalRate | total:'Rate':'Rs'}}</small>
+          </div>
+          <div class="col-sm-1">
+            <button type="button" class="btn btn-danger" title="Remove Chemical" (click)="removeItem(i, ItemType.Chemical)"><i
+                class="fas fa-times"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-10">
+          <button type="button" class="btn btn-info" title="Add Chemical" (click)="addItem(ItemType.Chemical)">Add More <i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="form-group row total">
+        <label for="chemicalTotal" class="col-sm-2 col-form-label">Total</label>
+        <div class="col-sm-3 offset-sm-7">
+          <label class="col-form-label">{{form.value.entryItems.entryChemicalItems.total | number}}</label>
+        </div>
+      </div>
+    </div>
+    <div formGroupName="entryColorItems">
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Color</label>
+      </div>
+      <div formArrayName="items">
+        <div class="form-group row" *ngFor="let item of entryColorItems.controls;index as i" [formGroupName]="i">
+          <div class="col-sm-4">
+            <input type="text" [typeahead]="autoCompleteChemical" typeaheadWaitMs="500" typeaheadOptionField="name"
+              (typeaheadOnSelect)="onSelect($event, item)" placeholder="Item Name" class="form-control" formControlName="itemName">
+          </div>
+          <div class="col-sm-4">
+            <input type="text" placeholder="Quantity (kg)" class="form-control" formControlName="itemQuantity">
+            <small class="text-muted">={{item.value.itemQuantityValue}} BAL: {{item.value.itemQuantityBalance}}</small>
+          </div>
+          <div class="col-sm-3">
+            <input type="number" placeholder="Rate (Rs/kg)" class="form-control" formControlName="itemRate">
+            <small class="text-muted">{{item.value.itemTotalRate | total:'Rate':'Rs'}}</small>
+          </div>
+          <div class="col-sm-1">
+            <button type="button" class="btn btn-danger" title="Remove Color" (click)="removeItem(i, ItemType.Color)"><i
+                class="fas fa-times"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-10">
+          <button type="button" class="btn btn-info" title="Add Color" (click)="addItem(ItemType.Color)">Add More <i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="form-group row total">
+        <label for="colorTotal" class="col-sm-2 col-form-label">Total</label>
+        <div class="col-sm-3 offset-sm-7">
+          <label class="col-form-label">{{form.value.entryItems.entryColorItems.total | number}}</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row total">
+    <label class="col-sm-9 col-form-label">Total</label>
+    <div class="col-sm-3">
+      <label class="col-form-label">{{form.value.entryTotal | number}}</label>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-12">
+      <button type="submit" class="btn btn-success">Submit</button>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="custom-control custom-checkbox">
+      <input formControlName="print" type="checkbox" class="custom-control-input" id="print">
+      <label class="custom-control-label" for="print">Print Form</label>
+    </div>
+  </div>
+</form>

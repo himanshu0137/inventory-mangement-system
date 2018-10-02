@@ -1,0 +1,61 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">{{oldItem ? 'Edit' : 'New'}} Item</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="closeMe()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-group row">
+          <label for="itemType" class="col-sm-2 col-form-label">Item Type</label>
+          <div class="col-sm-10">
+            <div class="btn-group" btnRadioGroup formControlName="itemType">
+              <label btnRadio="{{ItemType.Chemical}}" class="btn btn-chemical" tabindex="0" role="button">{{ItemType[ItemType.Chemical]}}</label>
+              <label btnRadio="{{ItemType.Color}}" class="btn btn-color" tabindex="0" role="button">{{ItemType[ItemType.Color]}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="itemName" class="col-sm-2 col-form-label">Name</label>
+          <div class="col-sm-10">
+            <input type="text" placeholder="Name" class="form-control" id="itemName" formControlName="itemName">
+            <small *ngIf="form.get('itemName').errors" class="form-text text-muted">{{form.get('itemName').errors.item}}</small>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="itemQuantityPacked" class="col-sm-2 col-form-label">Quantity(Packed)</label>
+          <div class="col-sm-10">
+            <input type="text" placeholder="Quantity(Kgs)" class="form-control" id="itemQuantityPacked" formControlName="itemQuantityPacked">
+            <small class="text-muted">{{form.value.itemQuantityPackedValue | total:'Quantity':'Kg'}}</small>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="itemQuantityLoose" class="col-sm-2 col-form-label">Quantity(Loose)</label>
+          <div class="col-sm-10">
+            <input type="text" placeholder="Quantity(Kgs)" class="form-control" id="itemQuantityLoose" formControlName="itemQuantityLoose">
+            <small class="text-muted">{{form.value.itemQuantityLooseValue | total:'Quantity':'Kg'}}</small>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="itemRate" class="col-sm-2 col-form-label">Rate</label>
+          <div class="col-sm-10">
+            <input type="number" placeholder="Rate" class="form-control" id="itemRate" formControlName="itemRate">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="itemTax" class="col-sm-2 col-form-label">GST</label>
+          <div class="col-sm-10">
+            <input type="number" placeholder="Tax(%)" class="form-control" id="itemTax" formControlName="itemTax">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <button type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

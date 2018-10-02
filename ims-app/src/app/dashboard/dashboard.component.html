@@ -1,0 +1,13 @@
+<div class="container">
+  <tabset [justified]="true" #dashboardTabs>
+    <tab heading="New Entry" (select)="changeTab(DashBoardTabs.NewEntry)">
+      <app-new-entry *ngIf="isTabSelected(DashBoardTabs.NewEntry)"></app-new-entry>
+    </tab>
+    <tab heading="View Entries" (select)="changeTab(DashBoardTabs.ViewEntries)">
+      <app-view-entry *ngIf="isTabSelected(DashBoardTabs.ViewEntries)"></app-view-entry>
+    </tab>
+    <tab heading="View Storage" (select)="changeTab(DashBoardTabs.ViewStorage)">
+      <app-view-storage *ngIf="isTabSelected(DashBoardTabs.ViewStorage)"></app-view-storage>
+    </tab>
+  </tabset>
+</div>

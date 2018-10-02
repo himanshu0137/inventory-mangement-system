@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Print Preview</title>
+    <link rel="stylesheet" href="./assets/bootstrap.min.css">
+    <script defer>
+        const ipc = require('electron').ipcRenderer;
+        ipc.on('open-print-window-reply', (e, data) =>
+        {
+            console.log(data);
+            loadTable(data);
+        });
+        function loadTable(data)
+        {
+            let totalChemical = 0;
+            let totalColor = 0;
+            let chemicalItems = document.getElementById('chemicalItems');
+            let colorItems = document.getElementById('colorItems');
+            data.items.reverse().forEach(v =>
+            {
+                if (v.type === 'Chemical')
+                {
+                    chemicalItems.insertAdjacentElement('afterbegin', getItemRow(v));
+                    totalChemical += v.rate * v.quantity;
+                }
+                else if (v.type === 'Color')
+                {
+                    colorItems.insertAdjacentElement('afterbegin', getItemRow(v));
+                    totalColor += v.rate * v.quantity;
+                }
+            });
+            document.getElementById("totalChemical").innerText = totalChemical;
+            document.getElementById("totalColor").innerText = totalColor;
+            document.getElementById("totalChemicalperKg").innerText = (totalChemical / data.weight).toFixed(3);
+            document.getElementById("totalColorperKg").innerText = (totalColor / data.weight).toFixed(3);
+            let d = new Date(data.date);
+            document.getElementById("date").innerText = `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}`
+            document.getElementById("partyName").innerText = data.partyName;
+            document.getElementById("lotNo").innerText = data.lotNo;
+            document.getElementById("rollCount").innerText = data.rollCount;
+            document.getElementById("weight").innerText = data.weight;
+            document.getElementById("machineNo").innerText = data.machineNo;
+            document.getElementById("cloth").innerText = data.cloth;
+            document.getElementById("operator").innerText = data.operator;
+            document.getElementById("totalperKg").innerText = ((totalChemical + totalColor) / data.weight).toFixed(3);
+        }
+        function getItemRow(item)
+        {
+            let row = document.createElement('tr');
+            let data;
+            let content;
+            data = document.createElement('td');
+            content = document.createTextNode(item.name);
+            data.appendChild(content);
+            row.appendChild(data);
+
+            data = document.createElement('td');
+            content = document.createTextNode(item.quantity);
+            data.appendChild(content);
+            row.appendChild(data);
+
+            data = document.createElement('td');
+            content = document.createTextNode(item.rate);
+            data.appendChild(content);
+            row.appendChild(data);
+
+            data = document.createElement('td');
+            content = document.createTextNode((item.rate * item.quantity).toFixed(3));
+            data.appendChild(content);
+            row.appendChild(data);
+
+            return row;
+        }
+    </script>
+    <style>
+        @page {
+            size: landscape;
+            margin: 0.7in 0in 1.2in 0.75in;
+        }
+
+        @media print {
+            .btn {
+                display: none;
+            }
+        }
+
+        .container {
+            padding-top: 50px;
+        }
+
+        table.table-bordered {
+            border: 2px solid black !important;
+            margin-top: 20px !important;
+        }
+
+        table.table-bordered>thead>tr>th {
+            border: 2px solid black !important;
+        }
+
+        table.table-bordered>tbody>tr>td {
+            border: 2px solid black !important;
+        }
+
+        body {
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .btn{
+            position: fixed;
+            left: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="btn btn-primary" onClick="window.print()">Print</button>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9">
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>Items</th>
+                            <th>Quantity</th>
+                            <th>Rate</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="chemicalItems">
+                        <tr>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td>Total</td>
+                            <td id="totalChemical"></td>
+                            <td id="totalChemicalperKg"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">Color</td>
+                        </tr>
+                    </tbody>
+                    <tbody id="colorItems">
+                        <tr>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td>Total</td>
+                            <td id="totalColor"></td>
+                            <td id="totalColorperKg"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-2 align-self-end align-self-center">
+                <table class="table table-bordered table-sm">
+                    <tbody>
+                        <tr>
+                            <td>Date</td>
+                            <td id="date"></td>
+                        </tr>
+                        <tr>
+                            <td>Party</td>
+                            <td id="partyName"></td>
+                        </tr>
+                        <tr>
+                            <td>Lot</td>
+                            <td id="lotNo"></td>
+                        </tr>
+                        <tr>
+                            <td>Roll</td>
+                            <td id="rollCount"></td>
+                        </tr>
+                        <tr>
+                            <td>Weight</td>
+                            <td id="weight"></td>
+                        </tr>
+                        <tr>
+                            <td>Machine</td>
+                            <td id="machineNo"></td>
+                        </tr>
+                        <tr>
+                            <td>Cloth</td>
+                            <td id="cloth"></td>
+                        </tr>
+                        <tr>
+                            <td>Operator</td>
+                            <td id="operator"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td id="totalperKg"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
