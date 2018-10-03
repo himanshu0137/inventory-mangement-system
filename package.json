@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron . --inspect"
+    "start": "electron . --inspect",
+    "build": "electron-packager . --platform=win32 --arch=ia32 --out=.\\binaries"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +15,7 @@
   },
   "devDependencies": {
     "@angular/cli": "^6.2.1",
-    "electron": "^2.0.8"
+    "electron": "^2.0.8",
+    "electron-packager": "^12.1.2"
   }
 }
