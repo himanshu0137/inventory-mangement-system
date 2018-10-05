@@ -84,13 +84,13 @@ export class NewItemComponent implements OnInit
   }
   public onSubmit()
   {
-    if (this.form.hasError)
+    if (this.form.errors)
     {
       return;
     }
     const value = this.form.value;
     this.itemSubmit.emit(new DataItem(
-      this.oldItem.id || '',
+      this.oldItem ? this.oldItem.id : '',
       value.itemType,
       -1,
       value.itemName.toLowerCase(),
