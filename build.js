@@ -16,5 +16,7 @@ packager({
     executableName: "GCR_Dyeing",
     out: "./binaries",
     name: "GCR Dyeing",
-    overwrite: true
+    overwrite: true,
+    prune: true,
+    asar: true
 }).then(appPaths => console.log(appPaths)).catch(error => console.log(error));
