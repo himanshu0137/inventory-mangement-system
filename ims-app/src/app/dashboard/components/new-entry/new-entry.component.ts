@@ -168,25 +168,25 @@ export class NewEntryComponent implements OnInit, OnDestroy
   {
     const entryValue = new EntryItem();
     const formValue = this.form.value;
-    entryValue.cloth = formValue.entryCloth.toLowerCase();
-    entryValue.color = formValue.entryColor.toLowerCase();
+    entryValue.cloth = (formValue.entryCloth || '').toLowerCase();
+    entryValue.color = (formValue.entryColor || '').toLowerCase();
     entryValue.date = new Date((formValue.entryDate as Date).toDateString());
-    entryValue.lotNo = formValue.entryLot.toLowerCase();
-    entryValue.machineNo = formValue.entryMachineNo.toLowerCase();
-    entryValue.operator = formValue.entryOperator.toLowerCase();
-    entryValue.partyName = formValue.entryPartyName.toLowerCase();
-    entryValue.rollCount = parseInt(formValue.entryRollCount, 10);
-    entryValue.weight = parseFloat(formValue.entryWeight);
+    entryValue.lotNo = (formValue.entryLot || '').toLowerCase();
+    entryValue.machineNo = (formValue.entryMachineNo || '').toLowerCase();
+    entryValue.operator = (formValue.entryOperator || '').toLowerCase();
+    entryValue.partyName = (formValue.entryPartyName || '').toLowerCase();
+    entryValue.rollCount = parseInt(formValue.entryRollCount || 0, 10);
+    entryValue.weight = parseFloat(formValue.entryWeight || 0);
     entryValue.items = [].concat(
       formValue.entryItems.entryChemicalItems.items.map(v =>
       {
         if (v.itemName && v.itemQuantityValue && v.itemRate)
         {
           return {
-            name: v.itemName.toLowerCase(),
+            name: (v.itemName || '').toLowerCase(),
             type: ItemType.Chemical,
-            quantity: parseFloat(v.itemQuantityValue),
-            rate: parseFloat(v.itemRate)
+            quantity: parseFloat(v.itemQuantityValue || 0),
+            rate: parseFloat(v.itemRate || 0)
           };
         }
       })).concat(
@@ -195,10 +195,10 @@ export class NewEntryComponent implements OnInit, OnDestroy
           if (v.itemName && v.itemQuantityValue && v.itemRate)
           {
             return {
-              name: v.itemName.toLowerCase(),
+              name: (v.itemName || '').toLowerCase(),
               type: ItemType.Color,
-              quantity: parseFloat(v.itemQuantityValue),
-              rate: parseFloat(v.itemRate)
+              quantity: parseFloat(v.itemQuantityValue || 0),
+              rate: parseFloat(v.itemRate || 0)
             };
           }
         })).filter(v => v ? true : false);
