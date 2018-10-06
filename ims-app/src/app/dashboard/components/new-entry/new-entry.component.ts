@@ -157,8 +157,8 @@ export class NewEntryComponent implements OnInit, OnDestroy
       {
         const control = this.dynamicItem;
         control.patchValue({
-          'itemName': v.name, 'itemRate': v.totalPriceString,
-          'itemStorageQuantity': v.looseAmount.toFixed(3), 'itemQuantityBalance': v.looseAmount.toFixed(3)
+          'itemName': v.name || '', 'itemRate': v.totalPriceString || '',
+          'itemStorageQuantity': (v.looseAmount || 0).toFixed(3), 'itemQuantityBalance': (v.looseAmount || 0).toFixed(3)
         });
         this.entryChemicalItems.push(control);
       });

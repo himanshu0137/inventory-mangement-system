@@ -75,6 +75,14 @@ function createWindow()
     let callBack = function (data) { event.sender.send('find-storage-items-reply', data); }
     dbContext.findStorageItem(term, callBack);
   });
+  ipcMain.on('delete-storage-item', (event, id) => {
+    let callBack = function (data) { event.sender.send('delete-storage-item-reply', data); }
+    dbContext.deleteStorageItem(id, callBack);
+  });
+  ipcMain.on('delete-entry', (event, id) => {
+    let callBack = function (data) { event.sender.send('delete-entry-reply', data); }
+    dbContext.deleteEntry(id, callBack);
+  });
 }
 
 // This method will be called when Electron has finished

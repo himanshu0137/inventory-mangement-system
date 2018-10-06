@@ -25,7 +25,7 @@ export class ViewEntryComponent implements OnInit
     { headerName: 'Party Name', field: 'partyName', filter: 'agTextColumnFilter', suppressMenu: true },
     { headerName: 'Color', field: 'color', filter: 'agTextColumnFilter', suppressMenu: true },
     { headerName: 'cost', valueGetter: this.costGetter, filter: 'agNumberColumnFilter', suppressMenu: true },
-    { headerName: '', cellRenderer: (param) => this.printButtonRenderer(param), suppressMenu: true, suppressFilter: true }
+    { headerName: '', cellRenderer: (param) => this.toolsButtonRenderer(param), suppressMenu: true, suppressFilter: true }
   ];
 
   private rowData: any[] = [];
@@ -44,15 +44,7 @@ export class ViewEntryComponent implements OnInit
       enableFilter: true,
       floatingFilter: true,
       domLayout: 'autoHeight',
-      onGridReady: e =>
-      {
-        this.electronService.getEntries().subscribe(v =>
-        {
-          this.rowData = v;
-          this.gridOptions.api.setRowData(this.rowData);
-          this.gridOptions.api.sizeColumnsToFit();
-        });
-      }
+      onGridReady: e => this.initData()
     };
   }
   private costGetter(param: ValueGetterParams): string
@@ -60,21 +52,54 @@ export class ViewEntryComponent implements OnInit
     const total = (param.data as EntryItem).items.reduce((acc, curr) => acc += (curr.rate * curr.quantity), 0);
     return (total / param.data.weight).toFixed(3);
   }
+  private initData(): void
+  {
+    this.electronService.getEntries().subscribe(v =>
+    {
+      this.rowData = v;
+      this.gridOptions.api.setRowData(this.rowData);
+      this.gridOptions.api.sizeColumnsToFit();
+    });
+  }
   private dateFormatter(param: ValueFormatterParams): string
   {
     const d = new Date(param.data.date);
     return `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}`;
   }
-  private printButtonRenderer(param): HTMLElement
+
+  private toolsButtonRenderer(param): HTMLDivElement
   {
-    const b: HTMLButtonElement = this.renderer.createElement('button');
+    const container: HTMLDivElement = this.renderer.createElement('div');
+    this.renderer.addClass(container, 'btn-group');
+
+    let b: HTMLButtonElement = this.renderer.createElement('button');
     this.renderer.addClass(b, 'btn-primary');
     this.renderer.appendChild(b, this.renderer.createText('Print'));
     this.renderer.listen(b, 'click', () =>
     {
       this.printService.printEntry(param.data);
     });
-    return b;
+    this.renderer.appendChild(container, b);
+
+    b = this.renderer.createElement('button');
+    this.renderer.addClass(b, 'btn-warning');
+    this.renderer.appendChild(b, this.renderer.createText('Edit'));
+    this.renderer.listen(b, 'click', () =>
+    {
+      //
+    });
+    this.renderer.appendChild(container, b);
+
+    b = this.renderer.createElement('button');
+    this.renderer.addClass(b, 'btn-danger');
+    this.renderer.appendChild(b, this.renderer.createText('Delete'));
+    this.renderer.listen(b, 'click', () =>
+    {
+      this.electronService.deleteEntry(param.data._id).subscribe(v => { });
+      this.initData();
+    });
+    this.renderer.appendChild(container, b);
+    return container;
   }
   private dateComparator(searchValue: Date, cellValue)
   {

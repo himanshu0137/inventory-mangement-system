@@ -90,5 +90,19 @@ module.exports = {
                 const value = err ? [] : docs;
                 callBack(value);
             });
+    },
+    deleteStorageItem: function (id, callBack)
+    {
+        db.storage.remove({ _id: id }, function (err, numRemoved)
+        {
+            callBack(err ? false : true);
+        });
+    },
+    deleteEntry: function (id, callBack)
+    {
+        db.entries.remove({ _id: id }, function (err, numRemoved)
+        {
+            callBack(err ? false : true);
+        });
     }
 }

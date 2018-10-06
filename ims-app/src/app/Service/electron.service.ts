@@ -135,4 +135,28 @@ export class ElectronService
       this.electronProvider.send('find-storage-items', searchTerm);
     });
   }
+  public deleteStorageItem(id: string): Observable<boolean>
+  {
+    return Observable.create((observer: Observer<boolean>) =>
+    {
+      this.electronProvider.once('delete-storage-item-reply', (e) =>
+      {
+        observer.next(true);
+        observer.complete();
+      });
+      this.electronProvider.send('delete-storage-item', id);
+    });
+  }
+  public deleteEntry(id: string): Observable<boolean>
+  {
+    return Observable.create((observer: Observer<boolean>) =>
+    {
+      this.electronProvider.once('delete-entry-reply', (e) =>
+      {
+        observer.next(true);
+        observer.complete();
+      });
+      this.electronProvider.send('delete-entry', id);
+    });
+  }
 }

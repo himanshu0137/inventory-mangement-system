@@ -48,7 +48,7 @@ export class ViewStorageComponent implements OnInit, OnDestroy
     },
     {
       headerName: '',
-      cellRenderer: (param) => this.editButtonRenderer(param)
+      cellRenderer: (param) => this.toolsButtonRenderer(param)
     }
   ];
   public popUpShow = false;
@@ -116,7 +116,7 @@ export class ViewStorageComponent implements OnInit, OnDestroy
     this.oldItem = null;
     this.closePopUp();
   }
-  private editButtonRenderer(param): HTMLElement
+  private editButtonRenderer(param): HTMLButtonElement
   {
     const b: HTMLButtonElement = this.renderer.createElement('button');
     this.renderer.addClass(b, 'btn-primary');
@@ -127,6 +127,27 @@ export class ViewStorageComponent implements OnInit, OnDestroy
       this.openPopUp();
     });
     return b;
+  }
+  private deleteButtonRenderer(param): HTMLButtonElement
+  {
+    const b: HTMLButtonElement = this.renderer.createElement('button');
+    this.renderer.addClass(b, 'btn-danger');
+    this.renderer.appendChild(b, this.renderer.createText('Delete'));
+    this.renderer.listen(b, 'click', () =>
+    {
+      this.electronService.deleteStorageItem(param.data.id).subscribe(v => { });
+      this.showItems();
+    });
+    return b;
+  }
+  private toolsButtonRenderer(param): HTMLDivElement
+  {
+    const container: HTMLDivElement = this.renderer.createElement('div');
+    this.renderer.addClass(container, 'btn-group');
+    this.renderer.appendChild(container, this.editButtonRenderer(param));
+    this.renderer.appendChild(container, this.deleteButtonRenderer(param));
+
+    return container;
   }
   ngOnDestroy(): void
   {
