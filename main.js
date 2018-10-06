@@ -9,7 +9,11 @@ let db;
 function createWindow()
 {
   db = dbContext.init();
-  win = new BrowserWindow({ width: 800, height: 600 });
+  win = new BrowserWindow({
+    width: 800, height: 600, webPreferences: {
+      plugins: true
+    }
+  });
   win.loadFile('dist/index.html')
 
   // Open the DevTools.
@@ -54,7 +58,9 @@ function createWindow()
   ipcMain.on('open-print-window', (event, body) =>
   {
     printWindow = new BrowserWindow({
-      width: 800, height: 600, parent: win, modal: true, show: false
+      width: 800, height: 600, parent: win, modal: true, show: false, webPreferences: {
+        plugins: true
+      }
     });
     printWindow.loadFile('dist/printPreview.html');
 
@@ -67,19 +73,23 @@ function createWindow()
       printWindow.show();
     });
   });
-  ipcMain.on('chemical-items', (event, term) => {
+  ipcMain.on('chemical-items', (event, term) =>
+  {
     let callBack = function (data) { event.sender.send('chemical-items-reply', data); }
     dbContext.getChemicalItems(term, callBack);
   });
-  ipcMain.on('find-storage-items', (event, term) => {
+  ipcMain.on('find-storage-items', (event, term) =>
+  {
     let callBack = function (data) { event.sender.send('find-storage-items-reply', data); }
     dbContext.findStorageItem(term, callBack);
   });
-  ipcMain.on('delete-storage-item', (event, id) => {
+  ipcMain.on('delete-storage-item', (event, id) =>
+  {
     let callBack = function (data) { event.sender.send('delete-storage-item-reply', data); }
     dbContext.deleteStorageItem(id, callBack);
   });
-  ipcMain.on('delete-entry', (event, id) => {
+  ipcMain.on('delete-entry', (event, id) =>
+  {
     let callBack = function (data) { event.sender.send('delete-entry-reply', data); }
     dbContext.deleteEntry(id, callBack);
   });
