@@ -50,6 +50,7 @@ export class NewItemComponent implements OnInit
         itemRate: ['', Validators.required],
         itemTax: ['', Validators.required]
       });
+    // this.form.get('itemType').valueChanges.subscribe(v => { console.log(v); });
     this.form.get('itemName').valueChanges.pipe(
       filter(e => e && e.length > 3)
     ).subscribe(v =>
@@ -93,11 +94,11 @@ export class NewItemComponent implements OnInit
       this.oldItem ? this.oldItem.id : '',
       value.itemType,
       -1,
-      value.itemName.toLowerCase(),
-      parseFloat(value.itemQuantityLooseValue),
-      parseFloat(value.itemQuantityPackedValue),
-      parseFloat(value.itemRate),
-      parseFloat(value.itemTax),
+      (value.itemName || '').toLowerCase(),
+      parseFloat(value.itemQuantityLooseValue || 0),
+      parseFloat(value.itemQuantityPackedValue || 0),
+      parseFloat(value.itemRate || 0),
+      parseFloat(value.itemTax || 0),
       value.itemType === ItemType.Chemical
     ));
   }
