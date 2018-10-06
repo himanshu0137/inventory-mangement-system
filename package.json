@@ -15,8 +15,8 @@
     "nedb": "^1.8.0"
   },
   "devDependencies": {
-    "@angular/cli": "^6.2.1",
-    "electron": "^2.0.8",
-    "electron-packager": "^12.1.2"
+    "@angular/cli": "^6.2.4",
+    "electron": "^3.0.2",
+    "electron-packager": "^12.2.0"
   }
 }
