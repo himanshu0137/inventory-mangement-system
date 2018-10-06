@@ -62,7 +62,7 @@
         <label class="col-sm-2 col-form-label">Chemical</label>
       </div>
       <div formArrayName="items">
-        <div class="form-group row" *ngFor="let item of entryChemicalItems.controls;index as i;trackBy:trackByFn"
+        <div class="form-group row" *ngFor="let item of entryChemicalItems.controls;index as i"
           [formGroupName]="i">
           <div class="col-sm-4">
             <input type="text" list="chemicalSuggetion" placeholder="Item Name" class="form-control" formControlName="itemName">
